@@ -16,13 +16,13 @@ var WebFontConfig = {
 
 var iconsMain, iconsPaused, iconsEnd, iconsPlaying, iconsProfile, iconsScore;
 var newPlayer, newFalling;
-var moons, lees, ans, jungs, mins, sims, nams;
-var moonName, leeName, anName, jungName, minName, simName, namName;
-var miniMoon, miniLee, miniAn, miniJung, miniMin, miniSim, miniNam;
+var moons, ans, mins, sims;
+var moonName, anName, minName, simName;
+var miniMoon, miniAn, miniMin, miniSim;
 var player, miniPlayer, playerName, ending, background;
 var score = 0;
 var playing = false;
-const NUM_PLAYER = 7;
+const NUM_PLAYER = 4;
 var numFallings = 4;
 const PLAYER_WIDTH_SIZE = 80;
 const PLAYING_PLAYER_WIDTH_SCALE = 0.8;
@@ -37,34 +37,28 @@ var playerIndex;
 var backgroundMusic, badHitMusic, gameoverMusic, goodHitMusic, winMusic;
 var moonsFalling = ['lee', 'an', 'jung', 'min', 'sim', 'nam', 'moon1', 'moon2', 'moon3', 'moon4', 'moon5', 'moon6'];
 var ansFalling = ['moon', 'lee', 'jung', 'min', 'sim', 'nam', 'an1', 'an2', 'an3', 'an4', 'an5', 'an6'];
-var leesFalling = ['moon', 'an', 'jung', 'min', 'sim', 'nam', 'lee1', 'lee2', 'lee3', 'lee4', 'lee5', 'lee6'];
-var jungsFalling = ['moon', 'an', 'lee', 'sim', 'nam', 'jung1', 'min', 'jung2', 'jung3', 'jung4', 'jung5', 'jung6'];
 var minsFalling = ['moon', 'an', 'lee', 'jung', 'sim', 'nam', 'min1', 'min2', 'min3', 'min4', 'min5', 'min6'];
 var simsFalling = ['moon', 'an', 'lee', 'jung', 'min', 'nam', 'sim1', 'sim2', 'sim3', 'sim4', 'sim5', 'sim6'];
-var namsFalling = ['moon', 'an', 'lee', 'jung', 'sim', 'min', 'nam1', 'nam2', 'nam3', 'nam4', 'nam5', 'nam6'];
-var playersName = ['moon', 'lee', 'an', 'jung', 'min', 'sim', 'nam'];
-var fallings = [moonsFalling, leesFalling, ansFalling, jungsFalling, minsFalling, simsFalling, namsFalling];
+var playersName = ['moon', 'an', 'min', 'sim'];
+var fallings = [moonsFalling, ansFalling, minsFalling, simsFalling];
 var players = [];
 var miniPlayers = [];
 var endings = [];
 var names = [];
 var nowFallings, texts;
-var replayText, shareText, firstText, secondText, thirdText, firthText, fifthText, sixthText, seventhText, rankingText, eventText;
-var moon, lee, an, jung, min, sim, nam;
+var replayText, shareText, firstText, secondText, thirdText, firthText, rankingText, eventText;
+var moon, an, min, sim;
 var moon1, moon2, moon3, moon4, moon5, moon6;
-var lee1, lee2, lee3, lee4, lee5, lee6;
 var an1, an2, an3, an4, an5, an6;
-var jung1, jung2, jung3, jung4, jung5, jung6;
 var min1, min2, min3, min4, min5, min6;
 var sim1, sim2, sim3, sim4, sim5, sim6;
-var nam1, nam2, nam3, nam4, nam5, nam6;
-var profileAn1, profileAn2, profileMoon1, profileMoon2, profileLee1, profileLee2,
-  profileJung1, profileJung2, profileMin1, profileMin2, profileSim1, profileSim2, profileNam1, profileNam2;
+var profileAn1, profileAn2, profileMoon1, profileMoon2, 
+ profileMin1, profileMin2, profileSim1, profileSim2;
 var profiles1, profiles2;
 var endingGood, endingBad1, endingBad2, endingBad3, endingBad4, endingEvent;
-var moonRank, leeRank, anRank, jungRank, minRank, simRank, namRank;
+var moonRank, anRank, minRank, simRank;
 var database = firebase.database();
-var korNames = ["문재인", "이재명", "안철수", "안희정", "유승민", "심상정", "남경필"];
+var korNames = ["문재인", "안철수", "유승민", "심상정"];
 
 function preload() {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -94,9 +88,9 @@ function loadComplete() {
   initializeSprite();
   initializeAudio();
 
-  profiles1 = [profileMoon1, profileLee1, profileAn1, profileJung1, profileMin1, profileSim1, profileNam1];
-  profiles2 = [profileMoon2, profileLee2, profileAn2, profileJung2, profileMin2, profileSim2, profileNam2];
-  names = [moonName, leeName, anName, jungName, minName, simName, namName];
+  profiles1 = [profileMoon1, profileAn1, profileMin1, profileSim1];
+  profiles2 = [profileMoon2, profileAn2, profileMin2, profileSim2];
+  names = [moonName, anName, minName, simName];
   endings = [endingGood, endingEvent, endingBad1, endingBad2, endingBad3, endingBad4];
   backgroundMusic.loopFull();
 
@@ -119,11 +113,6 @@ function loadComplete() {
       toProfile.visible = true;
       moveToProfile();
     }, this);
-    /*setTimeout(function () {
-      toProfilePressed.visible = false;
-      toProfile.visible = true;
-      moveToProfile();
-    }, 100);*/
   })
 
   toPlay.events.onInputDown.add(function () {
@@ -134,11 +123,6 @@ function loadComplete() {
       toPlay.visible = true;
       startGame();
     }, this);
-    /*setTimeout(function () {
-      toPlayPressed.visible = false;
-      toPlay.visible = true;
-      startGame();
-    }, 100);*/
   }, this);
 
   toArticle.events.onInputDown.add(function () {
@@ -156,11 +140,6 @@ function loadComplete() {
       toArticle.visible = true;
       moveToArticle();
     }, this);
-    /*setTimeout(function () {
-      toArticle.visible = true;
-      toArticlePressed.visible = false;
-      moveToArticle();
-    }, 100);*/
   }, this);
 
   left.events.onInputDown.add(function () {
@@ -297,17 +276,11 @@ function loadComplete() {
     if (playerIndex == 0) {
       changeBackground(profileMoon1);
     } else if (playerIndex == 1) {
-      changeBackground(profileLee1);
-    } else if (playerIndex == 2) {
       changeBackground(profileAn1);
-    } else if (playerIndex == 3) {
-      changeBackground(profileJung1);
-    } else if (playerIndex == 4) {
+    } else if (playerIndex == 2) {
       changeBackground(profileMin1);
-    } else if (playerIndex == 5) {
+    } else if (playerIndex == 3) {
       changeBackground(profileSim1);
-    } else if (playerIndex == 6) {
-      changeBackground(profileNam1);
     }
   })
 
@@ -363,28 +336,6 @@ function loadComplete() {
     fill: "white"
   });
   firthText.anchor.set(0, 0.5);
-
-  fifthText = game.add.text(game.world.width * 0.5 - moveLeft, 550, "", {
-    font: "18px Noto Sans",
-    fill: "white"
-  });
-  fifthText.anchor.set(0, 0.5);
-
-
-  sixthText = game.add.text(game.world.width * 0.5 - moveLeft, 580, "", {
-    font: "18px Noto Sans",
-    fill: "white"
-  });
-  sixthText.anchor.set(0, 0.5);
-
-
-  seventhText = game.add.text(game.world.width * 0.5 - moveLeft, 610, "", {
-    font: "18px Noto Sans",
-    fill: "white"
-  });
-  seventhText.anchor.set(0, 0.5);
-
-
 
   initPlayers();
   organizeGroup();
@@ -449,31 +400,7 @@ function addText(x, y, key, style) {
     text = "회고록";
   } else if (key === 'moon6') {
     text = "호남홀대";
-  } else if (key === 'jung1') {
-    text = "공약왕";
-  } else if (key === 'jung2') {
-    text = "충남엑소";
-  } else if (key === 'jung3') {
-    text = "합리진보";
-  } else if (key === 'jung4') {
-    text = "듣보잡";
-  } else if (key === 'jung5') {
-    text = "사드";
-  } else if (key === 'jung6') {
-    text = "전과";
-  } else if (key === 'lee1') {
-    text = "소통왕";
-  } else if (key === 'lee2') {
-    text = "사이다";
-  } else if (key === 'lee3') {
-    text = "무상복지";
-  } else if (key === 'lee4') {
-    text = "가천대";
-  } else if (key === 'lee5') {
-    text = "음주운전";
-  } else if (key === 'lee6') {
-    text = "가족관계";
-  } else if (key === 'min1') {
+  }  else if (key === 'min1') {
     text = "경제전문";
   } else if (key === 'min2') {
     text = "합리보수";
@@ -497,19 +424,7 @@ function addText(x, y, key, style) {
     text = "강성진보";
   } else if (key === 'sim6') {
     text = "강성진보";
-  } else if (key === 'nam1') {
-    text = "연정경험";
-  } else if (key === 'nam2') {
-    text = "젊은피";
-  } else if (key === 'nam3') {
-    text = "공유경제";
-  } else if (key === 'nam4') {
-    text = "아들군대";
-  } else if (key === 'nam5') {
-    text = "FTA";
-  } else if (key === 'nam6') {
-    text = "금수저";
-  }
+  } 
 
   var newText = game.add.text(x, y + 20, text, style);
   game.physics.enable(newText, Phaser.Physics.ARCADE);
@@ -532,7 +447,7 @@ function initPlayers() {
   for (var i = 0; i < NUM_PLAYER; i++) {
     newPlayer = game.add.sprite(game.world.width * 0.5, 369, playersName[i] + 's');
     game.physics.enable(newPlayer, Phaser.Physics.ARCADE);
-    if (playersName[i] == 'moon' || playersName[i] == 'jung') {
+    if (playersName[i] == 'moon') {
       newPlayer.animations.add('happy');
       newPlayer.animations.play('happy', 6, true);
 
@@ -553,7 +468,7 @@ function initPlayers() {
 function initMiniPlayers() {
   for (var i = 0; i < NUM_PLAYER; i++) {
     newPlayer = game.add.sprite(84, 43, playersName[i] + 's');
-    if (playersName[i] == 'moon' || playersName[i] == 'jung') {
+    if (playersName[i] == 'moon') {
       newPlayer.animations.add('happy');
       newPlayer.animations.play('happy', 6, true);
     } else {
@@ -749,17 +664,11 @@ function moveToArticle() {
   if (playerIndex == 0) {
     goToArticle('moon');
   } else if (playerIndex == 1) {
-    goToArticle('lee');
-  } else if (playerIndex == 2) {
     goToArticle('ahn');
-  } else if (playerIndex == 3) {
-    goToArticle('jung');
-  } else if (playerIndex == 4) {
+  } else if (playerIndex == 2) {
     goToArticle('you');
-  } else if (playerIndex == 5) {
+  } else if (playerIndex == 3) {
     goToArticle('sim');
-  } else if (playerIndex == 6) {
-    goToArticle('nam');
   }
 }
 
@@ -771,17 +680,11 @@ function moveToProfile() {
   if (playerIndex == 0) {
     changeBackground(profileMoon1);
   } else if (playerIndex == 1) {
-    changeBackground(profileLee1);
-  } else if (playerIndex == 2) {
     changeBackground(profileAn1);
-  } else if (playerIndex == 3) {
-    changeBackground(profileJung1);
-  } else if (playerIndex == 4) {
+  } else if (playerIndex == 2) {
     changeBackground(profileMin1);
-  } else if (playerIndex == 5) {
+  } else if (playerIndex == 3) {
     changeBackground(profileSim1);
-  } else if (playerIndex == 6) {
-    changeBackground(profileNam1);
   }
 }
 
@@ -791,17 +694,11 @@ function moveToSecondProfile() {
   if (playerIndex == 0) {
     changeBackground(profileMoon2);
   } else if (playerIndex == 1) {
-    changeBackground(profileLee2);
-  } else if (playerIndex == 2) {
     changeBackground(profileAn2);
-  } else if (playerIndex == 3) {
-    changeBackground(profileJung2);
-  } else if (playerIndex == 4) {
+  } else if (playerIndex == 2) {
     changeBackground(profileMin2);
-  } else if (playerIndex == 5) {
+  } else if (playerIndex == 3) {
     changeBackground(profileSim2);
-  } else if (playerIndex == 6) {
-    changeBackground(profileNam2);
   }
 }
 
@@ -845,7 +742,7 @@ function changeBackground(newBackground) {
 function calculateRanking() {
   //player.key.substring(0, player.key.length - 1)
   var scoreList = [];
-  var textList = [firstText, secondText, thirdText, firthText, fifthText, sixthText, seventhText];
+  var textList = [firstText, secondText, thirdText, firthText];
   database.ref('winners').once('value').then(function (snapshot) {
     var data = snapshot.val();
     var total = 0;
@@ -869,21 +766,13 @@ function calculateRanking() {
       key: 'moon',
       score: Object.keys(data['moon']).length
     });
-    scoreList.push({
-      name: '삼재명',
-      key: 'lee',
-      score: Object.keys(data['lee']).length
-    });
+
     scoreList.push({
       name: '안쳤어',
       key: 'an',
       score: Object.keys(data['an']).length
     });
-    scoreList.push({
-      name: '아니정',
-      key: 'jung',
-      score: Object.keys(data['jung']).length
-    });
+
     scoreList.push({
       name: '유분수',
       key: 'min',
@@ -894,11 +783,7 @@ function calculateRanking() {
       key: 'sim',
       score: Object.keys(data['sim']).length
     });
-    scoreList.push({
-      name: '남분필',
-      key: 'nam',
-      score: Object.keys(data['nam']).length
-    });
+
     scoreList.sort(function (a, b) {
       return b.score - a.score;
     })
@@ -915,12 +800,9 @@ function calculateRanking() {
 
 function load() {
   game.load.image('moon', 'img/moon.png');
-  game.load.image('lee', 'img/lee.png');
   game.load.image('an', 'img/an.png');
-  game.load.image('jung', 'img/jung.png');
   game.load.image('min', 'img/min.png');
   game.load.image('sim', 'img/sim.png');
-  game.load.image('nam', 'img/nam.png');
 
   game.load.image('moon1', 'img/moon1.png');
   game.load.image('moon2', 'img/moon2.png');
@@ -929,26 +811,12 @@ function load() {
   game.load.image('moon5', 'img/moon5.png');
   game.load.image('moon6', 'img/moon6.png');
 
-  game.load.image('lee1', 'img/lee1.png');
-  game.load.image('lee2', 'img/lee2.png');
-  game.load.image('lee3', 'img/lee3.png');
-  game.load.image('lee4', 'img/lee4.png');
-  game.load.image('lee5', 'img/lee5.png');
-  game.load.image('lee6', 'img/lee6.png');
-
   game.load.image('an1', 'img/an1.png');
   game.load.image('an2', 'img/an2.png');
   game.load.image('an3', 'img/an3.png');
   game.load.image('an4', 'img/an4.png');
   game.load.image('an5', 'img/an5.png');
   game.load.image('an6', 'img/an6.png');
-
-  game.load.image('jung1', 'img/jung1.png');
-  game.load.image('jung2', 'img/jung2.png');
-  game.load.image('jung3', 'img/jung3.png');
-  game.load.image('jung4', 'img/jung4.png');
-  game.load.image('jung5', 'img/jung5.png');
-  game.load.image('jung6', 'img/jung6.png');
 
   game.load.image('min1', 'img/min1.png');
   game.load.image('min2', 'img/min2.png');
@@ -963,13 +831,6 @@ function load() {
   game.load.image('sim4', 'img/sim4.png');
   game.load.image('sim5', 'img/sim5.png');
   game.load.image('sim6', 'img/sim6.png');
-
-  game.load.image('nam1', 'img/nam1.png');
-  game.load.image('nam2', 'img/nam2.png');
-  game.load.image('nam3', 'img/nam3.png');
-  game.load.image('nam4', 'img/nam4.png');
-  game.load.image('nam5', 'img/nam5.png');
-  game.load.image('nam6', 'img/nam6.png');
 
   game.load.image('toArticle', 'img/to-article.png');
   game.load.image('toPlay', 'img/to-play.png');
@@ -998,37 +859,25 @@ function load() {
   game.load.image('infoBackground', 'img/info-background.png');
 
   game.load.spritesheet('moons', 'img/moons.png', PLAYER_WIDTH_SIZE, 112);
-  game.load.spritesheet('lees', 'img/lees.png', 90, 114);
   game.load.spritesheet('ans', 'img/ans.png', PLAYER_WIDTH_SIZE, 110);
-  game.load.spritesheet('jungs', 'img/jungs.png', PLAYER_WIDTH_SIZE, 119);
   game.load.spritesheet('mins', 'img/mins.png', PLAYER_WIDTH_SIZE, 109);
   game.load.spritesheet('sims', 'img/sims.png', 75, 116);
-  game.load.spritesheet('nams', 'img/nams.png', PLAYER_WIDTH_SIZE, 118);
 
   game.load.image('profileAn1', 'img/profilean1.png');
   game.load.image('profileAn2', 'img/profilean2.png');
   game.load.image('profileMoon1', 'img/profilemoon1.png');
   game.load.image('profileMoon2', 'img/profilemoon2.png');
-  game.load.image('profileLee1', 'img/profilelee1.png');
-  game.load.image('profileLee2', 'img/profilelee2.png');
-  game.load.image('profileJung1', 'img/profilejung1.png');
-  game.load.image('profileJung2', 'img/profilejung2.png');
   game.load.image('profileMin1', 'img/profilemin1.png');
   game.load.image('profileMin2', 'img/profilemin2.png');
   game.load.image('profileSim1', 'img/profilesim1.png');
   game.load.image('profileSim2', 'img/profilesim2.png');
-  game.load.image('profileNam1', 'img/profilenam1.png');
-  game.load.image('profileNam2', 'img/profilenam2.png');
   game.load.image('background1', 'img/background1.png');
   game.load.image('background2', 'img/background2.png');
 
   game.load.image('moonName', 'img/moon-name.png');
-  game.load.image('leeName', 'img/lee-name.png');
   game.load.image('anName', 'img/an-name.png');
-  game.load.image('jungName', 'img/jung-name.png');
   game.load.image('minName', 'img/min-name.png');
   game.load.image('simName', 'img/sim-name.png');
-  game.load.image('namName', 'img/nam-name.png');
 
   game.load.image('endingBad1', 'img/endingbad1.png');
   game.load.image('endingBad2', 'img/endingbad2.png');
@@ -1055,18 +904,12 @@ function initializeSprite() {
   profileAn1.visible = false;
   profileAn2 = game.add.tileSprite(0, 0, 360, 640, 'profileAn2');
   profileAn2.visible = false;
-  profileLee1 = game.add.tileSprite(0, 0, 360, 640, 'profileLee1');
-  profileLee1.visible = false;
-  profileLee2 = game.add.tileSprite(0, 0, 360, 640, 'profileLee2');
-  profileLee2.visible = false;
+
   profileMoon1 = game.add.tileSprite(0, 0, 360, 640, 'profileMoon1');
   profileMoon1.visible = false;
   profileMoon2 = game.add.tileSprite(0, 0, 360, 640, 'profileMoon2');
   profileMoon2.visible = false;
-  profileJung1 = game.add.tileSprite(0, 0, 360, 640, 'profileJung1');
-  profileJung1.visible = false;
-  profileJung2 = game.add.tileSprite(0, 0, 360, 640, 'profileJung2');
-  profileJung2.visible = false;
+
   profileMin1 = game.add.tileSprite(0, 0, 360, 640, 'profileMin1');
   profileMin1.visible = false;
   profileMin2 = game.add.tileSprite(0, 0, 360, 640, 'profileMin2');
@@ -1075,10 +918,7 @@ function initializeSprite() {
   profileSim1.visible = false;
   profileSim2 = game.add.tileSprite(0, 0, 360, 640, 'profileSim2');
   profileSim2.visible = false;
-  profileNam1 = game.add.tileSprite(0, 0, 360, 640, 'profileNam1');
-  profileNam1.visible = false;
-  profileNam2 = game.add.tileSprite(0, 0, 360, 640, 'profileNam2');
-  profileNam2.visible = false;
+
   infoBackground = game.add.tileSprite(0, 0, 360, 640, 'infoBackground');
   infoBackground.visible = false;
   info = game.add.sprite(320, 14, 'info');
@@ -1115,7 +955,6 @@ function initializeSprite() {
   right = game.add.sprite(268, 335, 'right');
   right.anchor.set(0, 1);
   right.inputEnabled = true;
-  //right.visible = false;
   rightPressed = game.add.sprite(268, 335, 'rightPressed');
   rightPressed.anchor.set(0, 1);
   rightPressed.visible = false;
@@ -1168,24 +1007,15 @@ function initializeSprite() {
   moonName = game.add.sprite(game.world.width * 0.5, 385, 'moonName');
   moonName.anchor.set(0.5, 0);
   moonName.visible = false;
-  leeName = game.add.sprite(game.world.width * 0.5, 385, 'leeName');
-  leeName.anchor.set(0.5, 0);
-  leeName.visible = false;
   anName = game.add.sprite(game.world.width * 0.5, 385, 'anName');
   anName.anchor.set(0.5, 0);
   anName.visible = false;
-  jungName = game.add.sprite(game.world.width * 0.5, 385, 'jungName');
-  jungName.anchor.set(0.5, 0);
-  jungName.visible = false;
   minName = game.add.sprite(game.world.width * 0.5, 385, 'minName');
   minName.anchor.set(0.5, 0);
   minName.visible = false;
   simName = game.add.sprite(game.world.width * 0.5, 385, 'simName');
   simName.anchor.set(0.5, 0);
   simName.visible = false;
-  namName = game.add.sprite(game.world.width * 0.5, 385, 'namName');
-  namName.anchor.set(0.5, 0);
-  namName.visible = false;
 
   endingGood = game.add.sprite(game.world.width * 0.5, 244, 'endingGood')
   endingGood.anchor.set(0.5, 1);
@@ -1224,12 +1054,9 @@ function organizeGroup() {
   iconsMain.add(right);
   iconsMain.add(left);
   iconsMain.add(moonName);
-  iconsMain.add(leeName);
   iconsMain.add(anName);
-  iconsMain.add(jungName);
   iconsMain.add(minName);
   iconsMain.add(simName);
-  iconsMain.add(namName);
   iconsMain.add(info);
   iconsMain.visible = false;
 
@@ -1260,9 +1087,6 @@ function organizeGroup() {
   iconsEnd.add(secondText);
   iconsEnd.add(thirdText);
   iconsEnd.add(firthText);
-  iconsEnd.add(fifthText);
-  iconsEnd.add(sixthText);
-  iconsEnd.add(seventhText);
   iconsEnd.add(rankingText);
   iconsEnd.add(eventText);
   iconsEnd.visible = false;
