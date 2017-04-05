@@ -1,5 +1,6 @@
-#### A game for 2017 presidential election
+# A game for 2017 presidential election
 
+*Caution: This code is dirty and not organized. It might harm your eyes.*
 
 ## 1. Install dependencies:
 
